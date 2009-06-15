@@ -1,0 +1,42 @@
+MooseX-AlwaysCoerce
+
+Moose extension to always enable coercions for attributes.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc MooseX::AlwaysCoerce
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-AlwaysCoerce
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/MooseX-AlwaysCoerce
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/MooseX-AlwaysCoerce
+
+    Search CPAN
+        http://search.cpan.org/dist/MooseX-AlwaysCoerce/
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 Rafael Kitover
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
