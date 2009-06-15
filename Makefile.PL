@@ -8,6 +8,8 @@ license  'perl';
 test_requires 'Test::More';
 
 requires 'Moose';
+requires 'namespace::autoclean';
+requires 'MooseX::ClassAttribute';
 
 auto_provides;
 auto_install;
