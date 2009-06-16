@@ -1,4 +1,7 @@
 Revision history for MooseX-AlwaysCoerce
 
+0.02  2009-06-16 17:23:29
+    - rewritten using metaroles, the Moose way
+
 0.01  2009-06-15 22:18:34
     - releasing...

@@ -5,12 +5,12 @@ use warnings;
 
 use namespace::autoclean;
 use Moose ();
+use MooseX::ClassAttribute ();
 use Moose::Exporter;
+use Moose::Util::MetaRole;
 use Carp;
 
-Moose::Exporter->setup_import_methods (
-    with_caller => [ 'has', 'class_has' ]
-);
+Moose::Exporter->setup_import_methods;
 
 =head1 NAME
 
@@ -18,25 +18,23 @@ MooseX::AlwaysCoerce - Automatically enable coercions for Moose attributes
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
     package MyClass;
 
     use Moose;
-    use MooseX::ClassAttribute;
     use MooseX::AlwaysCoerce;
     use MyTypeLib 'SomeType';
 
     has foo => (is => 'rw', isa => SomeType); # coerce => 1 automatically added
 
-    # same, but you must load MooseX::ClassAttribute *BEFORE*
-    # MooseX::AlwaysCoerce
+    # same, MooseX::ClassAttribute is automatically applied
     class_has bar => (is => 'rw', isa => SomeType);
 
 =head1 DESCRIPTION
@@ -45,18 +43,44 @@ Have you ever spent an hour or more trying to figure out "WTF, why did my
 coercion not run?" only to find out that you forgot C<< coerce => 1 >> ?
 
 Just load this module in your L<Moose> class and C<< coerce => 1 >> will be
-enabled for every attribute automatically.
+enabled for every attribute and class attribute automatically.
 
 =cut
 
-sub has {
-    push @_, (coerce => 1);
-    goto &Moose::has;
+{
+    package MooseX::AlwaysCoerce::Role::Meta::Attribute;
+    use namespace::autoclean;
+    use Moose::Role;
+
+    has coerce => (is => 'rw', default => 1);
+
+    package MooseX::AlwaysCoerce::Role::Meta::Class;
+    use namespace::autoclean;
+    use Moose::Role;
+
+    around add_class_attribute => sub {
+        my $next = shift;
+        my $self = shift;
+        $self->$next(@_, coerce => 1);
+    };
 }
 
-sub class_has {
-    push @_, (coerce => 1);
-    goto &MooseX::ClassAttribute::class_has;
+sub init_meta {
+    shift;
+    my %options = @_;
+    my $for_class = $options{for_class};
+
+    MooseX::ClassAttribute->import({ into => $for_class });
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class => $for_class,
+        attribute_metaclass_roles =>
+            ['MooseX::AlwaysCoerce::Role::Meta::Attribute'],
+        metaclass_roles =>
+            ['MooseX::AlwaysCoerce::Role::Meta::Class'],
+    );
+
+    return $for_class->meta;
 }
 
 =head1 AUTHOR
@@ -96,6 +120,8 @@ L<http://search.cpan.org/dist/MooseX-AlwaysCoerce/>
 =head1 ACKNOWLEDGEMENTS
 
 My own stupidity, for inspiring me to write this module.
+
+Dave Rolsky, for telling me how to do it the L<Moose> way.
 
 =head1 COPYRIGHT & LICENSE
 

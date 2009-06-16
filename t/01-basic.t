@@ -7,7 +7,6 @@ use Test::More tests => 3;
 {
     package MyClass;
     use Moose;
-    use MooseX::ClassAttribute;
     use MooseX::AlwaysCoerce;
     use Moose::Util::TypeConstraints;
 
