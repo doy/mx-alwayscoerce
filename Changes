@@ -1,5 +1,8 @@
 Revision history for MooseX-AlwaysCoerce
 
+0.03  2009-06-16 17:50:12
+    - make coerce => 0 work for class_has
+
 0.02  2009-06-16 17:23:29
     - rewritten using metaroles, the Moose way
 
