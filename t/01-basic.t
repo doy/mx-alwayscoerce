@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 {
     package MyClass;
@@ -18,6 +18,8 @@ use Test::More tests => 4;
     class_has bar => (is => 'rw', isa => 'MyType');
 
     class_has baz => (is => 'rw', isa => 'MyType', coerce => 0);
+
+    has quux => (is => 'rw', isa => 'MyType', coerce => 0);
 }
 
 ok( (my $instance = MyClass->new), 'instance' );
@@ -30,3 +32,8 @@ ok( (!$@), 'class attribute coercion ran' );
 
 eval { $instance->baz('quux') };
 ok( $@, 'class attribute coercion did not run with coerce => 0' );
+
+undef $@;
+
+eval { $instance->quux('mtfnpy') };
+ok( $@, 'attribute coercion did not run with coerce => 0' );
