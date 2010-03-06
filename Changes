@@ -1,5 +1,8 @@
 Revision history for MooseX-AlwaysCoerce
 
+0.04  2010-03-06 05:28:01
+    - remove t/00-load.t (was failing)
+
 0.03  2009-06-16 17:50:12
     - make coerce => 0 work for class_has
 
