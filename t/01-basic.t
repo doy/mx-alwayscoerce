@@ -25,10 +25,10 @@ use Test::More tests => 5;
 ok( (my $instance = MyClass->new), 'instance' );
 
 eval { $instance->foo('bar') };
-ok( (!$@), 'attribute coercion ran' );
+is $@, "", 'attribute coercion ran';
 
 eval { $instance->bar('baz') };
-ok( (!$@), 'class attribute coercion ran' );
+is $@, "", 'class attribute coercion ran';
 
 eval { $instance->baz('quux') };
 ok( $@, 'class attribute coercion did not run with coerce => 0' );
