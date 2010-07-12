@@ -93,6 +93,10 @@ sub init_meta {
 
 Rafael Kitover, C<< <rkitover at cpan.org> >>
 
+=head1 CONTRIBUTORS
+
+Schwern: Michael G. Schwern <mschwern@cpan.org>
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-moosex-alwayscoerce at rt.cpan.org>, or through
