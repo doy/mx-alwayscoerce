@@ -5,7 +5,8 @@ all_from 'lib/MooseX/AlwaysCoerce.pm';
 author   'Rafael Kitover <rkitover@cpan.org>';
 license  'perl';
 
-test_requires 'Test::More';
+test_requires 'Test::More' => '0.94';
+test_requires 'Test::Exception';
 
 requires 'Moose';
 requires 'namespace::autoclean';

@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 7;
+use Test::Exception;
 
 {
     package MyClass;
@@ -30,22 +31,18 @@ use Test::More tests => 7;
 
 ok( (my $instance = MyClass->new), 'instance' );
 
-eval { $instance->foo('bar') };
-is $@, "", 'attribute coercion ran';
+lives_ok { $instance->foo('bar') } 'attribute coercion ran';
 
-eval { $instance->bar('baz') };
-is $@, "", 'class attribute coercion ran';
+lives_ok { $instance->bar('baz') } 'class attribute coercion ran';
 
-eval { $instance->baz('quux') };
-ok( $@, 'class attribute coercion did not run with coerce => 0' );
+dies_ok { $instance->baz('quux') }
+    'class attribute coercion did not run with coerce => 0';
 
-undef $@;
+dies_ok { $instance->quux('mtfnpy') }
+    'attribute coercion did not run with coerce => 0';
 
-eval { $instance->quux('mtfnpy') };
-ok( $@, 'attribute coercion did not run with coerce => 0' );
+lives_ok { $instance->uncoerced_attr(10) }
+    'set attribute having type with no coercion and no coerce=0';
 
-eval { $instance->uncoerced_attr(10) };
-is $@, "", 'set attribute having type with no coercion and no coerce=0';
-
-eval { $instance->uncoerced_class_attr(10) };
-is $@, "", 'set class attribute having type with no coercion and no coerce=0';
+lives_ok { $instance->uncoerced_class_attr(10) }
+    'set class attribute having type with no coercion and no coerce=0';
