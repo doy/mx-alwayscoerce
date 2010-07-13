@@ -54,18 +54,28 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
     use namespace::autoclean;
     use Moose::Role;
 
-    has coerce => (is => 'rw', default => 1);
+    has coerce => (
+        lazy    => 1,
+        reader  => "should_coerce",
+        default => sub {
+            return 1 if shift->type_constraint->has_coercion;
+            return 0;
+        }
+    );
+
 
     package MooseX::AlwaysCoerce::Role::Meta::Class;
     use namespace::autoclean;
     use Moose::Role;
+    use Moose::Util::TypeConstraints;
 
     around add_class_attribute => sub {
         my $next = shift;
         my $self = shift;
         my ($what, %opts) = @_;
 
-        $opts{coerce} = 1 unless exists $opts{coerce};
+        my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint($opts{isa});
+        $opts{coerce} = 1 if !exists $opts{coerce} and $type->has_coercion;
 
         $self->$next($what, %opts);
     };
