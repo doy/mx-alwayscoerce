@@ -5,10 +5,13 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-eval { require MooseX::Method::Signatures };
-plan skip_all => "No MooseX::Method::Signatures" if $@;
-
-plan tests => 2;
+BEGIN {
+    if (eval { require MooseX::Method::Signatures }) {
+        plan tests => 2;
+    } else {
+        plan skip_all => 'This test needs MooseX::Method::Signatures';
+    }
+}
 
 {
     package MyClass;
