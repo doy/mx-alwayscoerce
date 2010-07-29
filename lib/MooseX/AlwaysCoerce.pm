@@ -68,6 +68,7 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
     use namespace::autoclean;
     use Moose::Role;
     use Moose::Util::TypeConstraints;
+    use MooseX::ClassAttribute;
 
     around add_class_attribute => sub {
         my $next = shift;
@@ -82,18 +83,27 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
 }
 
 my (undef, undef, $init_meta) = Moose::Exporter->build_import_methods(
+
     install => [ qw(import unimport) ],
+
     class_metaroles => {
         attribute   => ['MooseX::AlwaysCoerce::Role::Meta::Attribute'],
         class       => ['MooseX::AlwaysCoerce::Role::Meta::Class'],
     },
+
+    also            => ['MooseX::ClassAttribute'],
 );
 
 sub init_meta {
     my ($class, %options) = @_;
     my $for_class = $options{for_class};
 
-    MooseX::ClassAttribute->import({ into => $for_class });
+    # Bring this in only if we are being applied to a
+    # metaclass, but not a metarole.
+    if (Class::MOP::class_of($for_class)->isa('Class::MOP::Class'))
+    {
+        MooseX::ClassAttribute->import({ into => $for_class });
+    }
 
     # call generated method to do the rest of the work.
     goto $init_meta;
