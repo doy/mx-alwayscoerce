@@ -3,15 +3,17 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
 
 BEGIN {
     if (eval { require MooseX::Method::Signatures }) {
-        plan tests => 2;
+        plan tests => 3;
     } else {
         plan skip_all => 'This test needs MooseX::Method::Signatures';
     }
 }
+
+use Test::Exception;
+use Test::NoWarnings;
 
 {
     package MyClass;

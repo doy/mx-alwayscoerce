@@ -7,8 +7,8 @@ use Test::Exception;
 use Test::NoWarnings;
 
 {
-    package MyClass;
-    use Moose;
+    package MyRole;
+    use Moose::Role;
     use MooseX::AlwaysCoerce;
     use Moose::Util::TypeConstraints;
 
@@ -30,6 +30,12 @@ use Test::NoWarnings;
     class_has uncoerced_class_attr => (is => 'rw', isa => 'Uncoerced');
 }
 
+{
+    package MyClass;
+    use Moose;
+    with 'MyRole';
+}
+
 ok( (my $instance = MyClass->new), 'instance' );
 
 lives_ok { $instance->foo('bar') } 'attribute coercion ran';
@@ -47,3 +53,4 @@ lives_ok { $instance->uncoerced_attr(10) }
 
 lives_ok { $instance->uncoerced_class_attr(10) }
     'set class attribute having type with no coercion and no coerce=0';
+

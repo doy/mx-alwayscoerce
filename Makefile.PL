@@ -7,6 +7,7 @@ license  'perl';
 
 test_requires 'Test::More' => '0.94';
 test_requires 'Test::Exception';
+test_requires 'Test::NoWarnings';
 
 requires 'Moose';
 requires 'namespace::autoclean';
