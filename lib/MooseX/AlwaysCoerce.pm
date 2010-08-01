@@ -60,7 +60,8 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
 
         my $current_val = $self->$orig(@_);
 
-        return 0 if defined $current_val && $current_val == 0;
+        return $current_val if defined $current_val;
+
         return 1 if $self->type_constraint->has_coercion;
         return 0;
     };
