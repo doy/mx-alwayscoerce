@@ -18,11 +18,11 @@ MooseX::AlwaysCoerce - Automatically enable coercions for Moose attributes
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 =head1 SYNOPSIS
 
@@ -54,15 +54,16 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
     use namespace::autoclean;
     use Moose::Role;
 
-    has coerce => (
-        lazy    => 1,
-        reader  => "should_coerce",
-        default => sub {
-            return 1 if shift->type_constraint->has_coercion;
-            return 0;
-        }
-    );
+    around should_coerce => sub {
+        my $orig = shift;
+        my $self = shift;
 
+        my $current_val = $self->$orig(@_);
+
+        return 0 if defined $current_val && $current_val == 0;
+        return 1 if $self->type_constraint->has_coercion;
+        return 0;
+    };
 
     package MooseX::AlwaysCoerce::Role::Meta::Class;
     use namespace::autoclean;
@@ -91,19 +92,18 @@ my (undef, undef, $init_meta) = Moose::Exporter->build_import_methods(
         class       => ['MooseX::AlwaysCoerce::Role::Meta::Class'],
     },
 
-    also            => ['MooseX::ClassAttribute'],
+    role_metaroles => {
+        # applied_attribute should be available soon, for now roles are borked
+        # applied_attribute   => ['MooseX::AlwaysCoerce::Role::Meta::Attribute'],
+        role                => ['MooseX::AlwaysCoerce::Role::Meta::Class'],
+    }
 );
 
 sub init_meta {
     my ($class, %options) = @_;
     my $for_class = $options{for_class};
 
-    # Bring this in only if we are being applied to a
-    # metaclass, but not a metarole.
-    if (Class::MOP::class_of($for_class)->isa('Class::MOP::Class'))
-    {
-        MooseX::ClassAttribute->import({ into => $for_class });
-    }
+    MooseX::ClassAttribute->import({ into => $for_class });
 
     # call generated method to do the rest of the work.
     goto $init_meta;
