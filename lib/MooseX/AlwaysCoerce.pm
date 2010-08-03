@@ -78,7 +78,7 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
         my ($what, %opts) = @_;
 
         my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint($opts{isa});
-        $opts{coerce} = 1 if !exists $opts{coerce} and $type->has_coercion;
+        $opts{coerce} = 1 if $type and not exists $opts{coerce} and $type->has_coercion;
 
         $self->$next($what, %opts);
     };
