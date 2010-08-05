@@ -28,6 +28,8 @@ use Test::NoWarnings;
     has uncoerced_attr => (is => 'rw', isa => 'Uncoerced');
 
     class_has uncoerced_class_attr => (is => 'rw', isa => 'Uncoerced');
+
+    class_has untyped_class_attr => (is => 'rw');
 }
 
 ok( (my $instance = MyClass->new), 'instance' );

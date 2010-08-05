@@ -1,5 +1,7 @@
 Revision history for MooseX-AlwaysCoerce
 
+    - support class_has with no isa (Karen Etheridge)
+
 0.06  2010-07-28 00:58:50
     - Use modern Moose APIs, to avoid warnings with Moose 1.09 (Karen Etheridge)
 
