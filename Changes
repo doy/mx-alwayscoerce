@@ -1,5 +1,6 @@
 Revision history for MooseX-AlwaysCoerce
 
+0.07  2010-08-05 03:10:12
     - support class_has with no isa (Karen Etheridge)
 
 0.06  2010-07-28 00:58:50
