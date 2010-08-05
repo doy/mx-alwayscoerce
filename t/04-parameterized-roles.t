@@ -1,18 +1,15 @@
 #!/usr/bin/env perl
+
 use strict;
 use warnings;
-
 use Test::More;
+use Test::Exception;
 
-BEGIN {
-    if (eval { require MooseX::Role::Parameterized }) {
-        plan tests => 8;
-    } else {
-        plan skip_all => 'This test needs MooseX::Role::Parameterized';
-    }
+unless (eval { require MooseX::Role::Parameterized }) {
+    plan skip_all => 'This test needs MooseX::Role::Parameterized';
 }
 
-{
+eval <<'EOF';
     package Role;
     use MooseX::Role::Parameterized;
     use MooseX::AlwaysCoerce;
@@ -20,7 +17,6 @@ BEGIN {
 
     # I do nothing!
     role {};
-    use Moose::Util::TypeConstraints;
 
     subtype 'MyType', as 'Int';
     coerce 'MyType', from 'Str', via { length $_ };
@@ -38,17 +34,20 @@ BEGIN {
     has uncoerced_attr => (is => 'rw', isa => 'Uncoerced');
 
     class_has uncoerced_class_attr => (is => 'rw', isa => 'Uncoerced');
-}
 
-{
     package Foo;
     use Moose;
     with 'Role';
+EOF
+
+if ($@) {
+    plan skip_all =>
+'MooseX::ClassAttribute is currently incompatible with MooseX::Role::Parameterized';
 }
 
-package main;
-use Test::Exception;
-use Test::NoWarnings;
+plan tests => 8;
+
+eval 'use Test::NoWarnings';
 
 ok( (my $instance = MyClass->new), 'instance' );
 
@@ -67,5 +66,3 @@ lives_ok { $instance->uncoerced_attr(10) }
 
 lives_ok { $instance->uncoerced_class_attr(10) }
     'set class attribute having type with no coercion and no coerce=0';
-
-
