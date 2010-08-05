@@ -18,11 +18,11 @@ MooseX::AlwaysCoerce - Automatically enable coercions for Moose attributes
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 =head1 SYNOPSIS
 
@@ -62,7 +62,7 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
 
         return $current_val if defined $current_val;
 
-        return 1 if $self->type_constraint->has_coercion;
+        return 1 if $self->type_constraint && $self->type_constraint->has_coercion;
         return 0;
     };
 
@@ -77,10 +77,10 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
         my $self = shift;
         my ($what, %opts) = @_;
 
-        return unless exists $opts{isa};
-
-        my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint($opts{isa});
-        $opts{coerce} = 1 if not exists $opts{coerce} and $type->has_coercion;
+        if (exists $opts{isa}) {
+            my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint($opts{isa});
+            $opts{coerce} = 1 if not exists $opts{coerce} and $type->has_coercion;
+        }
 
         $self->$next($what, %opts);
     };
@@ -167,3 +167,4 @@ under the same terms as Perl itself.
 =cut
 
 1; # End of MooseX::AlwaysCoerce
+# vim:et sts=4 sw=4 tw=0:

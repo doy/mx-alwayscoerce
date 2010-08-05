@@ -1,5 +1,8 @@
 Revision history for MooseX-AlwaysCoerce
 
+0.09  2010-08-05 03:42:07
+    - support attributes without isa, correctly
+
 0.08  2010-08-05 03:14:37
     - make a test safer
 
