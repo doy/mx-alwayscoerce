@@ -2,15 +2,11 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 3;
 
-BEGIN {
-    if (eval { require MooseX::Method::Signatures }) {
-        plan tests => 3;
-    } else {
-        plan skip_all => 'This test needs MooseX::Method::Signatures';
-    }
-}
+use Test::Requires {
+    'MooseX::Method::Signatures' => 0.01,
+};
 
 use Test::Exception;
 use Test::NoWarnings;

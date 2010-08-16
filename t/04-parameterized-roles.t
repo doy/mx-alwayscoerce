@@ -5,9 +5,9 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-unless (eval { require MooseX::Role::Parameterized }) {
-    plan skip_all => 'This test needs MooseX::Role::Parameterized';
-}
+use Test::Requires {
+    'MooseX::Role::Parameterized' => 0.01,
+};
 
 eval <<'EOF';
     package Role;
