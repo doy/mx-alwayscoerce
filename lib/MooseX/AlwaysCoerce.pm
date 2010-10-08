@@ -70,7 +70,6 @@ Use C<< coerce => 0 >> to disable a coercion explicitly.
     use namespace::autoclean;
     use Moose::Role;
     use Moose::Util::TypeConstraints;
-    use MooseX::ClassAttribute;
 
     around add_class_attribute => sub {
         my $next = shift;
